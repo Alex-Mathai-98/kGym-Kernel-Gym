@@ -1,32 +1,48 @@
-# KBDr-Runner
+# :scroll: Kernel Gym (kGym)
 
-This framework is for KBDr research project.
+Kernel Gym is a platform that allows for scalable execution of hundreds to thousands of linux kernels within a span of a day. 
 
-## Roles
+:star: With kGym we aim to democratize research at the intersection of machine learning and system software
 
-Server-side roles:
+:star: Using kGym researchers can run LLM experiments on a massive **20 million** lines-of-code codebase like Linux with a few simple API invocations.
 
-- kscheduler: a backend server that schedule jobs and provide information to frontend.
-- kdashboard: a WebUI based on Next.js.
-- kmq: message broker.
-- kbuilder: containerized worker for building kernels.
-- kvmmanager: containerized worker for monitoring executions.
-- kworker: low-level worker library.
+## :building_construction: Architecture of kGym
 
-Client-side roles:
+![Architecture](./docs/KernelBench-Detailed-Architecture.png)
 
-- kcomposer: Python client library for job control.
 
-![Architecture](./docs/architecture.png)
+## :fire: Architecture Components
 
-## Deployment
+ :star: Client Facing Functionalities for Researchers:
 
-Tested on a Ubuntu Desktop
+- **Clerk** : A simple Python client library for issuing kernel jobs that can compile and execute kernel jobs. For standard users, you need only to get familiar with this library.
+
+:star: Backend functionalities running in the background:
+
+- **Scheduler**: a backend scheduler that schedule jobs across the different virtual machines and also provides information to frontend.
+- **Web UI**: a WebUI based on Next.js.
+- **RabbitMQ**: message broker.
+- **Kbuilder**: containerized worker for building kernels.
+- **Kreproducer**: containerized worker for monitoring executions.
+- **messager**: a low-level library for communication between  **Kreproducer** and **RabbitMQ**.
+
+## Testing Details
+
+We have tested KGym on a Ubuntu Desktop (with specific details below)
 
 ```
 ~$ uname -a
 Linux ********* 6.5.0-35-generic #35~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue May  7 09:00:52 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
 ```
+
+## Deployment
+
+**kGym currently has a hard requirement of the Google Cloud Platform (GCP)**. 
+
+Note: We understand that being able to run **kGym** on a local server would be the most cost-efficient way for most researchers. And hence we intend to provide this support in the future. 
+
+For the remainder of this tutorial you will need to work with ```gcloud``` - Google's library to interface with GCP.
+
 
 ### Install `gcloud` command line tool
 
