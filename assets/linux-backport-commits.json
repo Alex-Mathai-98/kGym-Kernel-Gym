@@ -1,0 +1,48 @@
+[
+    {
+        "fix_hash": "1d489151e9f9d1647110277ff77282fe4d96d09b",
+        "fix_title": "objtool: Don't fail on missing symbol table"
+    },
+    {
+        "fix_hash": "52a9dab6d892763b2a8334a568bd4e2c1a6fde66",
+        "fix_title": "libsubcmd: Fix use-after-free for realloc(..., 0)"
+    },
+    {
+        "fix_hash": "0711f0d7050b9e07c44bc159bbc64ac0a1022c7f",
+        "fix_title": "pid: take a reference when initializing `cad_pid"
+    },
+    {
+        "guilty_hash": "db2b0c5d7b6f19b3c2cab08c531b65342eb5252b",
+        "fix_hash": "82880283d7fcd0a1d20964a56d6d1a5cc0df0713",
+        "fix_title": "objtool: Fix truncated string warning"
+    },
+    {
+        "fix_hash": "644106cdb89844be2496b21175b7c0c2e0fab381",
+        "fix_title": "power: reset: ltc2952: Fix use of floating point literals"
+    },
+    {
+        "fix_hash": "310780e825f3ffd211b479b8f828885a6faedd63",
+        "fix_title": "usb: dwc2: hcd_queue: Fix use of floating point literal",
+        "force_merge": true
+    },
+    {
+        "fix_hash": "dfbd199a7cfe3e3cd8531e1353cdbd7175bfbc5e",
+        "fix_title": "selinux: use kernel linux/socket.h for genheaders and mdp"
+    },
+    {
+        "fix_hash": "1e1b6d63d6340764e00356873e5794225a2a03ea",
+        "fix_title": "lib/string.c: implement stpcpy"
+    },
+    {
+        "fix_hash": "9564a8cf422d7b58f6e857e3546d346fa970191e",
+        "fix_title": "Kbuild: fix # escaping in .cmd files for future Make"
+    },
+    {
+        "fix_hash": "eff8728fe69880d3f7983bec3fb6cea4c306261f",
+        "fix_title": "vmlinux.lds.h: Add PGO and AutoFDO input sections"
+    },
+    {
+        "fix_hash": "9feeb638cde083c737e295c0547f1b4f28e99583",
+        "fix_title": "tools build: fix # escaping in .cmd files for future Make"
+    }
+]

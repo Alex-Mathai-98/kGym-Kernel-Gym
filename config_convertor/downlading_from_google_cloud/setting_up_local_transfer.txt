@@ -1,0 +1,28 @@
+https://cloud.google.com/docs/authentication/provide-credentials-adc#how-to
+
+Application Default Credentials (ADC) is a strategy used by the Google authentication libraries to 
+automatically find credentials based on the application environment. The authentication libraries 
+make those credentials available to Cloud Client Libraries and Google API Client Libraries. When you 
+use ADC, your code can run in either a development or production environment without changing how 
+your application authenticates to Google Cloud services and APIs.
+
+# logging into your desired email and setting up the project
+gcloud auth login
+gcloud config set project PROJECT_ID
+
+# get current project
+gcloud projects list
+gcloud config get-value project
+
+# Create local authentication credentials for your Google Account:
+gcloud auth application-default login
+Response ==> Credentials saved to file: [<PATH>/.config/gcloud/application_default_credentials.json]
+
+# Install API keys client library
+pip install google-cloud-api-keys
+
+# Enable the "API Keys" API on google cloud
+# Enable the "Cloud Storage" on google cloud
+
+# Run "create_api_key.py" python file
+Successfully created an API key: projects/PROJECT_ID/locations/global/keys/API_KEY

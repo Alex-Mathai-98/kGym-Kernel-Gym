@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kbdr-kscheduler"
+description = "KBDr Scheduler"
+readme = "README.md"
+requires-python = ">=3.11"
+version = "v0.3.5"
+dependencies = [
+    "aio_pika",
+    "uvicorn",
+    "fastapi",
+    "aiosqlite",
+    "google-auth",
+    "aiofiles",
+    "google-cloud-storage"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["KBDr.*"]  # ["*"] by default

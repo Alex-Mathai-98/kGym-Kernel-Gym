@@ -1,0 +1,80 @@
+# compose.yml
+services:
+  kmq:
+    image: "us-central1-docker.pkg.dev/llms-for-program-repa-3940/kbdr/kbdr-kmq:${SERVICE_TAG}"
+    build:
+      context: ./
+      dockerfile: docker/kbdr-kmq.Dockerfile
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 5s
+      timeout: 5s
+      retries: 3
+  kscheduler:
+    image: "us-central1-docker.pkg.dev/llms-for-program-repa-3940/kbdr/kbdr-kscheduler:${SERVICE_TAG}"
+    build:
+      context: ./
+      dockerfile: docker/kbdr-kscheduler.Dockerfile
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    env_file:
+      - path: ./assets/kscheduler.env
+        required: true
+    environment:
+      - KBDR_SCHEDULER_DB_STR=/root/scheduler-db/scheduler.db
+      - GOOGLE_APPLICATION_CREDENTIALS=/root/gcp-credential.json
+    volumes:
+      - ./assets/kscheduler-credential.json:/root/gcp-credential.json
+      - ./assets/kscheduler-db:/root/scheduler-db
+    depends_on:
+      kmq:
+        condition: service_healthy
+  kdashboard:
+    image: "us-central1-docker.pkg.dev/llms-for-program-repa-3940/kbdr/kbdr-kdashboard:${SERVICE_TAG}"
+    build:
+      context: ./
+      dockerfile: docker/kbdr-kdashboard.Dockerfile
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+  kvmmanager:
+    image: "us-central1-docker.pkg.dev/llms-for-program-repa-3940/kbdr/kbdr-kvmmanager:${SERVICE_TAG}"
+    build:
+      context: ./
+      dockerfile: docker/kbdr-kvmmanager.Dockerfile
+    deploy:
+      mode: replicated
+      replicas: 10
+    restart: unless-stopped
+    env_file:
+      - path: ./assets/kvmmanager.env
+        required: true
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/root/gcp-credential.json
+    volumes:
+      - ./assets/kvmmanager-credential.json:/root/gcp-credential.json
+  kbuilder:
+    image: "us-central1-docker.pkg.dev/llms-for-program-repa-3940/kbdr/kbdr-kbuilder:${SERVICE_TAG}"
+    build:
+      context: ./
+      dockerfile: docker/kbdr-kbuilder.Dockerfile
+    restart: unless-stopped
+    env_file:
+      - path: ./assets/kbuilder.env
+        required: true
+    environment:
+      - KBUILDER_KERNEL_WORK_DIR=/root/work_dir
+      - KBUILDER_KERNEL_REPO_PATH=/mnt/repo
+      - GOOGLE_APPLICATION_CREDENTIALS=/root/gcp-credential.json
+      - KBUILDER_BACKPORT_COMMIT_JSON=/root/pick-commits.json
+    volumes:
+      - /dev:/dev
+      - ./assets/kbuilder-credential.json:/root/gcp-credential.json
+      - ./assets/kbuilder-repo:/mnt/repo
+      - ./assets/linux-backport-commits.json:/root/pick-commits.json
+    privileged: true

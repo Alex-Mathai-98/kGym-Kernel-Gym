@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kbdr-kworker"
+description = "KBDr KWorker library"
+readme = "README.md"
+requires-python = ">=3.11"
+version = "v0.3.5"
+dependencies = [
+    "jsonschema",
+    "aio_pika"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["KBDr.*"]  # ["*"] by default

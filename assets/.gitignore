@@ -1,0 +1,8 @@
+# Ignore everything just in case of leaking sensitive info;
+*
+
+# But not these files...
+!.gitignore
+!README.md
+!*.template
+!linux-backport-commits.json
