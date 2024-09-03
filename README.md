@@ -19,12 +19,12 @@ Kernel Gym is a platform that allows for scalable execution of hundreds to thous
 
 :star: Backend functionalities running in the background:
 
-- **Scheduler**: a backend scheduler that schedule jobs across the different virtual machines and also provides information to frontend.
-- **Web UI**: a WebUI based on Next.js.
+- **Scheduler**: a backend scheduler that schedule jobs across the different virtual machines and also provides information to frontend. The ```Scheduler``` is internally referred to as ```kscheduler``` in the code implementation. 
+- **Web UI**: a WebUI based on Next.js. The ```Web UI``` is internally referred to as ```kdashboard``` in the code implementation. 
 - **RabbitMQ**: message broker.
 - **Kbuilder**: containerized worker for building kernels.
-- **Kreproducer**: containerized worker for monitoring executions.
-- **messager**: a low-level library for communication between  **Kreproducer** and **RabbitMQ**.
+- **Kreproducer**: containerized worker for monitoring executions. The ```Kreproducer``` is internally referred to as ```kvmmanager``` in the code implementation. 
+- **messager**: a low-level library for communication between  **Kreproducer** and **RabbitMQ**. The ```messager``` is internally referred to as ```kworker``` in the code implementation. 
 
 ## Testing Details
 
@@ -320,3 +320,51 @@ gcloud compute ssh kbdr-main \
 ```
 
 `8000` port accesses to the API.
+
+## Examples of using ```clerk```
+
+Important parameters for a **kernel building job** using ```clerk```
+1. ```kernel_git_url``` - a URL to the git tree of the kernel implementation 
+2. ```kernel_commit_id``` - a git commit-id that specifies the exact version of the kernel
+3. ```kernel_config``` - the ```.config``` file containing all the kernel config operations
+4. ```userspace_img_name``` - the userspace image name (mostly ```buildroot.raw```)
+5. ```arch``` - we currently support only ```amd64```
+6. ```compiler``` - the compiler to be used (one of ```gcc``` or ```clang```)
+7. ```linker``` - the linker used to link all the modules (```ld``` for ```gcc``` and ```ld.lld``` for ```clang```)
+8. ```patch``` - an optional patch provided by an LLM to fix the buggy kernel
+
+A sample piece of code that runs a **kernel building** job
+```
+import KBDr.kcomposer as kcomp
+session = kcomp.KBDrSession(os.environ['KBDR_RUNNER_API_BASE_URL'])
+workers, args, kv = kcomp.compose_kernel_build(kernel_git_url: str,
+                                          kernel_commit_id: str,
+                                          kernel_config: str,
+                                          userspace_img_name: str,
+                                          arch: str,
+                                          compiler: str='gcc',
+                                          linker: str='ld',
+                                          patch: str='')
+session.create_job(workers, args, kv)
+```
+
+A sample piece of code that runs a bug-reproduction job which includes a **kernel building** job as welll as a **kernel reproducer** job - i.e. this job builds the kernel and then runs the reproducer file on the built kernel for a specified amount of time.
+
+In addition to the parameters used in the kernel building job, we also need the following extra parameters.
+
+
+9. ```reproducer_type``` - one of ```c``` or ```log``` indicating that the reproducer file is a C code snippet or a ```syz.log``` snippet containing ```syz``` DSL statements.
+10. ```reproducer_text``` - the actual text content of the reproducer 
+11. ```syzkaller_checkout (default='master')``` - the exact ```commit-id``` of syzkaller that we need to checkout and build. By default it is the latest syzkaller version.
+12. ```syzkaller_rollback (default=True)``` - When ```True``` instructs ```kGym``` to build syzkaller at the latest commit-id if it cannot build syzkaller at the specified commit-id.
+13. ```nproc (default=8)``` - Create a pool of ```nproc``` processes
+14. ```ninstance (default=4)``` - 
+15. ```restart_time (default='10m')``` -
+16. ```machine_type (default='gce:e2-standard-2')``` - 
+
+
+```
+import KBDr.kcomposer as kcomp
+session = kcomp.KBDrSession(os.environ['KBDR_RUNNER_API_BASE_URL'])
+
+```
