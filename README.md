@@ -323,6 +323,7 @@ gcloud compute ssh kbdr-main \
 
 ## Examples of using ```clerk```
 
+#### (1) Kernel Building Job
 Important parameters for a **kernel building job** using ```clerk```
 1. ```kernel_git_url``` - a URL to the git tree of the kernel implementation 
 2. ```kernel_commit_id``` - a git commit-id that specifies the exact version of the kernel
@@ -348,7 +349,7 @@ workers, args, kv = kcomp.compose_kernel_build(kernel_git_url: str,
 session.create_job(workers, args, kv)
 ```
 
-A sample piece of code that runs a bug-reproduction job which includes a **kernel building** job as welll as a **kernel reproducer** job - i.e. this job builds the kernel and then runs the reproducer file on the built kernel for a specified amount of time.
+#### (2) Bug Reproduction Job
 
 In addition to the parameters used in the kernel building job, we also need the following extra parameters.
 
@@ -357,14 +358,31 @@ In addition to the parameters used in the kernel building job, we also need the 
 10. ```reproducer_text``` - the actual text content of the reproducer 
 11. ```syzkaller_checkout (default='master')``` - the exact ```commit-id``` of syzkaller that we need to checkout and build. By default it is the latest syzkaller version.
 12. ```syzkaller_rollback (default=True)``` - When ```True``` instructs ```kGym``` to build syzkaller at the latest commit-id if it cannot build syzkaller at the specified commit-id.
-13. ```nproc (default=8)``` - Create a pool of ```nproc``` processes
-14. ```ninstance (default=4)``` - 
-15. ```restart_time (default='10m')``` -
-16. ```machine_type (default='gce:e2-standard-2')``` - 
+13. ```nproc (default=8)``` - Create a pool of ```nproc``` processes, where each process runs the reproducer file independently (within a GCE instance).
+14. `ninstance (default=5)` - The number of GCE instances to bring up inside the `kreproducer` VM to perform parallel execution across multiple instances. 
+15. `restart_time (default='10m')` - Continue to run (i.e. `restart`) the reproducer file up until `restart_time` minutes inside the GCE instance. 
+16. ```machine_type (default='gce:e2-standard-2')``` - The exact specification of the GCE instance.
 
+A sample piece of code that runs a bug-reproduction job which includes a **kernel building** job as welll as a **kernel reproducer** job - i.e. this job builds the kernel and then runs the reproducer file on the built kernel for a specified amount of time.
 
 ```
 import KBDr.kcomposer as kcomp
 session = kcomp.KBDrSession(os.environ['KBDR_RUNNER_API_BASE_URL'])
-
+workers, args, kv = kcomp.compose_bug_reproduction(kernel_git_url: str,
+                                          kernel_commit_id: str,
+                                          kernel_config: str,
+                                          userspace_img_name: str,
+                                          arch: str,
+                                          reproducer_type: str,
+                                          reproducer_text: str,
+                                          syzkaller_checkout: str='master',
+                                          syzkaller_rollback: bool=True,
+                                          compiler: str='gcc',
+                                          linker: str='ld',
+                                          patch: str='',
+                                          nproc: int=8,
+                                          ninstance: int=4,
+                                          restart_time: int='10m',
+                                          machine_type='gce:e2-standard-2')
+session.create_job(workers, args, kv)
 ```
