@@ -1,5 +1,10 @@
 # :scroll: Kernel Gym (kGym)
 
+<p align="left">
+    <a href="https://arxiv.org/abs/2407.02680"><img src="https://img.shields.io/badge/arXiv-2407.02680-b31b1b.svg?style=for-the-badge"> </a>
+    <a href="https://opensource.org/license/mit/"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge"> </a>
+</p>
+
 Kernel Gym is a platform that allows for scalable execution of hundreds to thousands of linux kernels within a span of a day. 
 
 :star: With kGym we aim to democratize research at the intersection of machine learning and system software
