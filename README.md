@@ -281,6 +281,23 @@ Configure the following files in such way:
 - `kscheduler.env`
 - `kvmmanager.env`
 
+### Configure kdashboard
+
+First make the configuration file:
+
+```
+cp ./kdashboard/src/app/config.json.template ./kdashboard/src/app/config.json
+```
+
+Edit it to:
+
+```json
+{
+    "KBDR_API_URL": "http://localhost:8000",
+    "KBDR_CLIENT_URL": "http://localhost:3000"
+}
+```
+
 ### Deploy KBDr-Runner on GCE VMs
 
 Use the deployment scripts to deploy runner nodes. First, cd to KBDr-Runner root folder, upload everything in the KBDr-Runner folder to the remote machines. You can delete the `userspace-images` folder and zip file before upload.
@@ -302,7 +319,7 @@ gcloud compute ssh kbdr-worker-1 --command="./deployment/deploy-new.sh"
 After the pre-installation scripts, build Docker images on each machine and install them as services:
 
 ```
-gcloud compute ssh kbdr-main --command="echo \"SERVICE_TAG=latest\" > .env && sudo docker compose build kmq kscheduler"
+gcloud compute ssh kbdr-main --command="echo \"SERVICE_TAG=latest\" > .env && sudo docker compose build kmq kscheduler kdashboard"
 gcloud compute ssh kbdr-worker-0 --command="echo \"SERVICE_TAG=latest\" > .env && sudo docker compose build kbuilder"
 gcloud compute ssh kbdr-worker-1 --command="echo \"SERVICE_TAG=latest\" > .env && sudo docker compose build kvmmanager"
 ```
@@ -310,7 +327,7 @@ gcloud compute ssh kbdr-worker-1 --command="echo \"SERVICE_TAG=latest\" > .env &
 Start services:
 
 ```
-gcloud compute ssh kbdr-main --command="sudo docker compose up -d kmq kscheduler"
+gcloud compute ssh kbdr-main --command="sudo docker compose up -d kmq kscheduler kdashboard"
 gcloud compute ssh kbdr-worker-0 --command="sudo docker compose up -d kbuilder"
 gcloud compute ssh kbdr-worker-1 --command="sudo docker compose up -d kvmmanager"
 ```
@@ -321,10 +338,10 @@ Use SSH for port forwarding:
 
 ```
 gcloud compute ssh kbdr-main \
-    -- -NL 8000:localhost:8000
+    -- -NL 8000:localhost:8000 -NL 3000:localhost:3000
 ```
 
-`8000` port accesses to the API.
+`8000` port accesses to the API, `3000` port accesses to the dashboard.
 
 ## Examples of using ```clerk```
 
