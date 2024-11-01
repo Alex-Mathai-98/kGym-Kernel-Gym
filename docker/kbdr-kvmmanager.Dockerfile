@@ -1,7 +1,7 @@
-FROM golang:1.21.6-bookworm as syzbuild
+FROM golang:1.23.1-bookworm as syzbuild
 
 WORKDIR /
-RUN apt update && apt install git -y && git clone https://github.com/google/syzkaller.git
+RUN apt update && apt install git -y && git clone https://github.com/kaloronahuang/syzkaller.git
 WORKDIR /syzkaller
 RUN make all && make crush
 
@@ -16,12 +16,12 @@ COPY --from=syzbuild /syzkaller/bin/syz-crush /usr/local/bin/syz-crush
 WORKDIR /root
 
 # Install Golang toolchain;
-RUN wget "https://dl.google.com/go/go1.21.4.linux-amd64.tar.gz" -O go.tar.gz && tar -C /usr/local -xzf go.tar.gz
+RUN wget "https://dl.google.com/go/go1.23.1.linux-amd64.tar.gz" -O go.tar.gz && tar -C /usr/local -xzf go.tar.gz
 ENV GOROOT=/usr/local/go
 ENV PATH=$GOROOT/bin:$PATH
 
 # Prepare a base syzkaller repo;
-RUN git clone https://github.com/google/syzkaller.git
+RUN git clone https://github.com/kaloronahuang/syzkaller.git
 
 # kvmmanager;
 COPY ./kworker /KBDr/kworker

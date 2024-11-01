@@ -1,8 +1,8 @@
 # Make syz-build;
-FROM golang:1.21.6-bookworm as syzbuild
+FROM golang:1.23.1-bookworm as syzbuild
 WORKDIR /
 RUN apt update && apt install git -y
-RUN git clone https://github.com/google/syzkaller.git
+RUN git clone https://github.com/kaloronahuang/syzkaller.git
 WORKDIR /syzkaller
 RUN make syz-build
 
