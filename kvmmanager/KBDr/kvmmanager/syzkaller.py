@@ -2,8 +2,8 @@
 import asyncio.subprocess as asp
 
 async def prepare_syzkaller(checkout_name: str, rollback: bool) -> tuple[bool, str, str]:
-    # not necessary to rollback if it's already preparing master;
-    rollback = rollback and (checkout_name != 'master')
+    # not necessary to rollback if it's already preparing kgym-latest;
+    rollback = rollback and (checkout_name != 'kgym-latest')
 
     syzkaller_repo = '/root/syzkaller'
     # make clean;
@@ -16,7 +16,7 @@ async def prepare_syzkaller(checkout_name: str, rollback: bool) -> tuple[bool, s
         return False, 'Failed to make clean the syzkaller folder', ''
     # git pull;
     proc = await asp.create_subprocess_exec(
-        'git', 'pull', 'origin', 'master', stdin=asp.DEVNULL, stderr=asp.DEVNULL,
+        'git', 'pull', 'origin', 'kgym-latest', stdin=asp.DEVNULL, stderr=asp.DEVNULL,
         stdout=asp.DEVNULL, cwd=syzkaller_repo
     )
     code = await proc.wait()
@@ -46,4 +46,4 @@ async def prepare_syzkaller(checkout_name: str, rollback: bool) -> tuple[bool, s
     if not rollback:
         return False, f'Failed to build syzkaller:{checkout_name}', ''
     # rollback;
-    return await prepare_syzkaller('master', False)
+    return await prepare_syzkaller('kgym-latest', False)
