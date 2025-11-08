@@ -16,6 +16,9 @@
 
 
 ## kGym Details
+
+**Parent Git Folder** - The parent git folder invoking this repo can be found here [Kernel Playground](https://github.com/Alex-Mathai-98/kGym-Kernel-Playground)
+
 Kernel Gym is a platform that allows for scalable execution of hundreds to thousands of linux kernels within a span of a day. 
 
 :star: With kGym we aim to democratize research at the intersection of machine learning and system software
