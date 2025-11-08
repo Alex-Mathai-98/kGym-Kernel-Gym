@@ -6,10 +6,12 @@
 </p>
 
 # Updates
+
 We have created an agent **CrashFixer** - that leverages kGym to resolve kernel crashes. Please find our paper below. 
 
 <a href="https://arxiv.org/abs/2504.20412"><img src="https://img.shields.io/badge/arXiv-2504.20412-b31b1b.svg?style=for-the-badge"> </a>
 
+Our new iteration of kGym, **kGymSuite** that runs experiments on QEMU is now open sourced at [ARiSE-Lab/kGymSuite](https://github.com/ARiSE-Lab/kGymSuite), check it out!
 
 ## kGym Details
 Kernel Gym is a platform that allows for scalable execution of hundreds to thousands of linux kernels within a span of a day. 
